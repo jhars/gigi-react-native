@@ -1,11 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
+import { StyleSheet, Text, View, Image } from 'react-native';
+import { Container, Content, Header, Form, Input, Item, Button, Label, Thumbnail} from 'native-base';
 import * as firebase from 'firebase';
 
-// Initialize Firebase
 const firebaseConfig = {
-  // ADD YOUR FIREBASE CREDENTIALS
   apiKey: "AIzaSyClef4i6edmDEjYHNcvCOholiNhoAx8jOo",
   authDomain: "gigi-native-app.firebaseapp.com",
   databaseURL: "https://gigi-native-app.firebaseio.com",
@@ -15,132 +13,78 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-import { Container, Content, Header, Form, Input, Item, Button, Label } from 'native-base';
-
 export default class App extends React.Component {
 
-    constructor(props) {
-        super(props)
+  constructor (props) {
+    super(props);
 
-        this.state = ({
-            email: '',
-            password: ''
-        })
-    }
+    this.state = {
+      value: false
+    };
+  }
 
-    componentDidMount() {
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user != null) {
-          console.log(user)
-        }
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user != null) {
+        console.log(user)
+      }
+    })
+  }
+
+  async loginWithFacebook() {
+    const {type,token} = await Expo.Facebook.logInWithReadPermissionsAsync('1785738094839350', { permissions: ['public_profile'] })
+    if(type == 'success') {
+      const credential = firebase.auth.FacebookAuthProvider.credential(token)
+      firebase.auth().signInWithCredential(credential).catch((error) => {
+        console.log(error )
       })
     }
+  }
 
-    signUpUser = (email, password) => {
+  render() {
+    return ([
 
-        try {
+      <View style={styles.container}>
+        <Image
+          source={require('./assets/gigi-logo.png')}
+          style={styles.image}
+        />
+      </View>,
 
-            if (this.state.password.length < 6) {
-                alert("Please enter atleast 6 characters")
-                return;
-            }
+      <Container style={styles.button}>
+        <Form>
 
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-        }
-        catch (error) {
-            console.log(error.toString())
-        }
-    }
+            <Button style={{ marginTop: 10 }}
+                full
+                rounded
+                primary
+                onPress={() => this.loginWithFacebook()}
+            >
+                <Text style={{ color: 'white' }}> Login with Facebook</Text>
+            </Button>
 
-    loginUser = (email, password) => {
+        </Form>
+      </Container>
 
-        try {
-
-            firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
-                console.log(user)
-
-            })
-        }
-        catch (error) {
-            console.log(error.toString())
-        }
-    }
-
-    async loginWithFacebook() {
-      const {type,token} = await Expo.Facebook.logInWithReadPermissionsAsync('1785738094839350', { permissions: ['public_profile'] })
-
-      if(type == 'success') {
-
-        const credential = firebase.auth.FacebookAuthProvider.credential(token)
-
-        firebase.auth().signInWithCredential(credential).catch((error) => {
-          console.log(error )
-        })
-      }
-    }
-
-    render() {
-        return (
-            <Container style={styles.container}>
-                <Form>
-                    <Item floatingLabel>
-                        <Label>Email</Label>
-                        <Input
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                            onChangeText={(email) => this.setState({ email })}
-                        />
-
-                    </Item>
-
-                    <Item floatingLabel>
-                        <Label>Password</Label>
-                        <Input
-                            secureTextEntry={true}
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                            onChangeText={(password) => this.setState({ password })}
-                        />
-                    </Item>
-
-                    <Button style={{ marginTop: 10 }}
-                        full
-                        rounded
-                        success
-                        onPress={() => this.loginUser(this.state.email, this.state.password)}
-                    >
-                        <Text style={{ color: 'white' }}> Login</Text>
-                    </Button>
-
-                    <Button style={{ marginTop: 10 }}
-                        full
-                        rounded
-                        primary
-                        onPress={() => this.signUpUser(this.state.email, this.state.password)}
-                    >
-                        <Text style={{ color: 'white' }}> Sign Up</Text>
-                    </Button>
-
-                    <Button style={{ marginTop: 10 }}
-                        full
-                        rounded
-                        primary
-                        onPress={() => this.loginWithFacebook()}
-                    >
-                        <Text style={{ color: 'white' }}> Login with Facebook</Text>
-                    </Button>
-
-                </Form>
-            </Container>
-        );
-    }
+    ]);
+  }
 }
 
+//================================================================//
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        alignItems: 'center',
         justifyContent: 'center',
-        padding: 10
+    },
+    button: {
+        padding: 15
+    },
+    image: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 250,
+      height: 250,
+      resizeMode:'contain'
     },
 });
