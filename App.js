@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Thumbnail} from 'native-base';
 import * as firebase from 'firebase';
+import LinkedInModal from 'react-native-linkedin'
 
 const firebaseConfig = {
   apiKey: "AIzaSyClef4i6edmDEjYHNcvCOholiNhoAx8jOo",
@@ -51,7 +52,7 @@ export default class App extends React.Component {
         />
       </View>,
 
-      <Container style={styles.button}>
+      <Container style={styles.facebook}>
         <Form>
 
             <Button style={{ marginTop: 10 }}
@@ -64,7 +65,16 @@ export default class App extends React.Component {
             </Button>
 
         </Form>
-      </Container>
+      </Container>,
+
+      <View style={styles.linkedin}>
+        <LinkedInModal
+          clientID="8666x2xlzhuyz8"
+          clientSecret="flH6g5zwLBt4gk6N"
+          redirectUri="https://localhost:19000/"
+          onSuccess={token => console.log(token)}
+        />
+      </View>
 
     ]);
   }
@@ -72,19 +82,25 @@ export default class App extends React.Component {
 
 //================================================================//
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    button: {
-        padding: 15
-    },
-    image: {
+  container: {
+      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      width: 250,
-      height: 250,
-      resizeMode:'contain'
-    },
+  },
+  button: {
+      padding: 15
+  },
+  image: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 250,
+    height: 250,
+    resizeMode:'contain'
+  },
+  linkedin: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
