@@ -1,4 +1,5 @@
 {
+  "name": "gigi-native-app",
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "dependencies": {

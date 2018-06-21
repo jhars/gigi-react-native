@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, Image } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Thumbnail} from 'native-base';
+import LinkedInButton from './app/components/SocialLogin';
+
 import * as firebase from 'firebase';
-import LinkedInModal from 'react-native-linkedin'
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyClef4i6edmDEjYHNcvCOholiNhoAx8jOo",
@@ -68,17 +70,15 @@ export default class App extends React.Component {
       </Container>,
 
       <View style={styles.linkedin}>
-        <LinkedInModal
-          clientID="8666x2xlzhuyz8"
-          clientSecret="flH6g5zwLBt4gk6N"
-          redirectUri="https://localhost:19000/"
-          onSuccess={token => console.log(token)}
-        />
+        <LinkedInButton />
       </View>
+
 
     ]);
   }
 }
+
+AppRegistry.registerComponent('gigi-native-app', () => App);
 
 //================================================================//
 const styles = StyleSheet.create({
