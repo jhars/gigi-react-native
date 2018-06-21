@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppRegistry, StyleSheet, Text, View, Image } from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Thumbnail} from 'native-base';
-import LinkedInButton from './app/components/SocialLogin';
+import SocialLogin from './app/components/SocialLogin';
 
 import * as firebase from 'firebase';
 
@@ -20,10 +20,6 @@ export default class App extends React.Component {
 
   constructor (props) {
     super(props);
-
-    this.state = {
-      value: false
-    };
   }
 
   componentDidMount() {
@@ -32,16 +28,6 @@ export default class App extends React.Component {
         console.log(user)
       }
     })
-  }
-
-  async loginWithFacebook() {
-    const {type,token} = await Expo.Facebook.logInWithReadPermissionsAsync('1785738094839350', { permissions: ['public_profile'] })
-    if(type == 'success') {
-      const credential = firebase.auth.FacebookAuthProvider.credential(token)
-      firebase.auth().signInWithCredential(credential).catch((error) => {
-        console.log(error )
-      })
-    }
   }
 
   render() {
@@ -53,27 +39,9 @@ export default class App extends React.Component {
           style={styles.image}
         />
       </View>,
-
-      <Container style={styles.facebook}>
-        <Form>
-
-            <Button style={{ marginTop: 10 }}
-                full
-                rounded
-                primary
-                onPress={() => this.loginWithFacebook()}
-            >
-                <Text style={{ color: 'white' }}> Login with Facebook</Text>
-            </Button>
-
-        </Form>
-      </Container>,
-
-      <View style={styles.linkedin}>
-        <LinkedInButton />
+      <View style={styles.social}>
+        <SocialLogin />
       </View>
-
-
     ]);
   }
 }
@@ -83,22 +51,18 @@ AppRegistry.registerComponent('gigi-native-app', () => App);
 //================================================================//
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
   },
-  button: {
-      padding: 15
-  },
   image: {
+    marginTop: 100,
     alignItems: 'center',
     justifyContent: 'center',
     width: 250,
     height: 250,
-    resizeMode:'contain'
+    resizeMode:'contain',
   },
-  linkedin: {
-    flex: 1,
+  social: {
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',

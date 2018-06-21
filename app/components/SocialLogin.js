@@ -3,32 +3,54 @@ import {AppRegistry, StyleSheet, Text, View} from 'react-native';
 import { Container, Content, Header, Form, Input, Item, Button, Label, Thumbnail} from 'native-base';
 import LinkedInModal from 'react-native-linkedin';
 
-export default class LinkedinButton extends React.Component {
+export default class SocialLogin extends React.Component {
 
-  // constructor(props){
-  //   super(props);
-  //   this.state = {
-  //     name: 'Gilligan',
-  //     showName: true,
-  //     message: this.props.message
-  //   }
-  // }
-  //
-  // static defaultProps = {
-  //   message: 'Hi there'
-  // }
+  async loginWithFacebook() {
+    const {type,token} = await Expo.Facebook.logInWithReadPermissionsAsync('1785738094839350', { permissions: ['public_profile'] })
+    if(type == 'success') {
+      const credential = firebase.auth.FacebookAuthProvider.credential(token)
+      firebase.auth().signInWithCredential(credential).catch((error) => {
+        console.log(error )
+      })
+    }
+  }
+
+  constructor(props){
+    super(props);
+    this.state = {
+      name: 'Gilligan',
+      showName: true,
+      message: this.props.message
+    }
+  }
 
   render() {
-    return(
-      // <View style={styles.linkedin}>
-        <LinkedInModal style={styles.linkedin}
-          clientID="8666x2xlzhuyz8"
-          clientSecret="flH6g5zwLBt4gk6N"
-          redirectUri="https://localhost:19000/"
-          onSuccess={token => console.log(token)}
-        />
-      // </View>
-    )
+    return([
+
+        <Form>
+            <Button style={styles.facebook}
+                full
+                rounded
+                primary
+                onPress={() => this.loginWithFacebook()}
+            >
+                <Text style={{ color: 'white' }}> Login with Facebook</Text>
+            </Button>
+        </Form>,
+
+        <Form style={styles.linkedin}>
+          <LinkedInModal
+            clientID="8666x2xlzhuyz8"
+            clientSecret="flH6g5zwLBt4gk6N"
+            redirectUri="https://localhost:19000/"
+            onSuccess={token => console.log(token)}
+          />
+
+        </Form>
+
+
+
+    ])
   }
 }
 
@@ -37,11 +59,23 @@ export default class LinkedinButton extends React.Component {
 //================================================================//
 const styles = StyleSheet.create({
   linkedin: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
     alignItems: 'center',
-  }
+    width:225,
+    padding: 15,
+    marginTop: 30,
+    marginLeft: 1,
+    marginRight: 1,
+    borderStyle: 'solid',
+    borderRadius: 30,
+    borderWidth: 0.5,
+    borderColor: 'black',
+
+
+  },
+  facebook: {
+      padding: 50,
+      marginTop: 75
+  },
 });
 
 
